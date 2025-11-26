@@ -8,6 +8,8 @@ use App\Http\Controllers\MembresiaController;
 use App\Http\Controllers\MiembroController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\VisitaController;
+use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\PerfilController;
 
 // Redirect root to login
 Route::get('/', function () {
@@ -44,4 +46,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('visitas', VisitaController::class);
     Route::post('/visitas/registrar-entrada', [VisitaController::class, 'registrarEntrada'])->name('visitas.entrada');
     Route::post('/visitas/{visita}/registrar-salida', [VisitaController::class, 'registrarSalida'])->name('visitas.salida');
+
+    // Configuración
+    Route::get('/configuracion', [ConfiguracionController::class, 'index'])->name('configuracion.index');
+    Route::put('/configuracion', [ConfiguracionController::class, 'update'])->name('configuracion.update');
+
+    // Perfil
+    Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil.index');
+    Route::put('/perfil', [PerfilController::class, 'update'])->name('perfil.update');
 });

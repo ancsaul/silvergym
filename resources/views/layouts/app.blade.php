@@ -378,9 +378,15 @@
                 </a></li>
                 @if(auth()->user()->role === 'admin')
                 <li><a href="{{ route('usuarios.index') }}" class="{{ request()->routeIs('usuarios.*') ? 'active' : '' }}">
-                    <span>⚙️</span> Usuarios
+                    <span>👤</span> Usuarios
+                </a></li>
+                <li><a href="{{ route('configuracion.index') }}" class="{{ request()->routeIs('configuracion.*') ? 'active' : '' }}">
+                    <span>⚙️</span> Configuración
                 </a></li>
                 @endif
+                <li><a href="{{ route('perfil.index') }}" class="{{ request()->routeIs('perfil.*') ? 'active' : '' }}">
+                    <span>👤</span> Perfil
+                </a></li>
             </ul>
             <div class="navbar-user">
                 <div class="user-info">

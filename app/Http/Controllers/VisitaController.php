@@ -10,17 +10,70 @@ class VisitaController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Visita::with('miembro');
+        // Filtros de fecha
+        $fechaInicio = $request->input('fecha_inicio', now()->toDateString());
+        $fechaFin = $request->input('fecha_fin', now()->toDateString());
 
-        if ($request->filled('fecha')) {
-            $query->whereDate('fecha_hora_entrada', $request->fecha);
-        } else {
-            $query->whereDate('fecha_hora_entrada', now()->toDateString());
+        // Query principal
+        $query = Visita::with('miembro')
+            ->whereBetween('fecha_hora_entrada', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59']);
+
+        if ($request->filled('tipo')) {
+            $query->where('tipo', $request->tipo);
         }
 
         $visitas = $query->orderBy('fecha_hora_entrada', 'desc')->paginate(20);
 
-        return view('visitas.index', compact('visitas'));
+        // Estadísticas del período
+        $totalVisitas = Visita::whereBetween('fecha_hora_entrada', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59'])->count();
+        $visitasMiembros = Visita::where('tipo', 'miembro')
+            ->whereBetween('fecha_hora_entrada', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59'])
+            ->count();
+        $visitasRegulares = Visita::where('tipo', 'regular')
+            ->whereBetween('fecha_hora_entrada', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59'])
+            ->count();
+        $ingresoRegulares = Visita::where('tipo', 'regular')
+            ->whereBetween('fecha_hora_entrada', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59'])
+            ->sum('monto');
+
+        // Miembros con más visitas
+        $miembrosTopVisitas = Visita::where('tipo', 'miembro')
+            ->with('miembro')
+            ->whereBetween('fecha_hora_entrada', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59'])
+            ->selectRaw('miembro_id, COUNT(*) as total_visitas')
+            ->groupBy('miembro_id')
+            ->orderByDesc('total_visitas')
+            ->limit(10)
+            ->get();
+
+        // Visitas por día de la semana
+        $visitasPorDia = Visita::whereBetween('fecha_hora_entrada', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59'])
+            ->selectRaw('DAYOFWEEK(fecha_hora_entrada) as dia, COUNT(*) as total')
+            ->groupBy('dia')
+            ->orderBy('dia')
+            ->pluck('total', 'dia')
+            ->toArray();
+
+        // Visitas por hora del día
+        $visitasPorHora = Visita::whereBetween('fecha_hora_entrada', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59'])
+            ->selectRaw('HOUR(fecha_hora_entrada) as hora, COUNT(*) as total')
+            ->groupBy('hora')
+            ->orderBy('hora')
+            ->pluck('total', 'hora')
+            ->toArray();
+
+        return view('visitas.index', compact(
+            'visitas',
+            'fechaInicio',
+            'fechaFin',
+            'totalVisitas',
+            'visitasMiembros',
+            'visitasRegulares',
+            'ingresoRegulares',
+            'miembrosTopVisitas',
+            'visitasPorDia',
+            'visitasPorHora'
+        ));
     }
 
     public function create()

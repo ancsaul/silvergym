@@ -11,15 +11,71 @@ class PagoController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Pago::with(['miembro', 'membresia', 'usuario']);
+        // Filtros de fecha
+        $fechaInicio = $request->input('fecha_inicio', now()->toDateString());
+        $fechaFin = $request->input('fecha_fin', now()->toDateString());
+
+        // Query principal
+        $query = Pago::with(['miembro', 'membresia', 'usuario'])
+            ->whereBetween('fecha_pago', [$fechaInicio, $fechaFin]);
 
         if ($request->filled('miembro_id')) {
             $query->where('miembro_id', $request->miembro_id);
         }
 
+        if ($request->filled('membresia_id')) {
+            $query->where('membresia_id', $request->membresia_id);
+        }
+
+        if ($request->filled('metodo_pago')) {
+            $query->where('metodo_pago', $request->metodo_pago);
+        }
+
         $pagos = $query->orderBy('fecha_pago', 'desc')->paginate(15);
 
-        return view('pagos.index', compact('pagos'));
+        // Estadísticas del período
+        $totalIngresos = Pago::whereBetween('fecha_pago', [$fechaInicio, $fechaFin])->sum('monto');
+        $totalPagos = Pago::whereBetween('fecha_pago', [$fechaInicio, $fechaFin])->count();
+
+        // Pagos por membresía (incluye VISITA REGULAR cuando membresia_id es NULL)
+        $pagosPorMembresia = Pago::with('membresia')
+            ->whereBetween('fecha_pago', [$fechaInicio, $fechaFin])
+            ->selectRaw('membresia_id, COUNT(*) as total_pagos, SUM(monto) as total_monto')
+            ->groupBy('membresia_id')
+            ->orderByDesc('total_monto')
+            ->get();
+
+        // Pagos por usuario (quien registró)
+        $pagosPorUsuario = Pago::with('usuario')
+            ->whereBetween('fecha_pago', [$fechaInicio, $fechaFin])
+            ->selectRaw('usuario_id, COUNT(*) as total_pagos, SUM(monto) as total_monto')
+            ->groupBy('usuario_id')
+            ->orderByDesc('total_monto')
+            ->get();
+
+        // Miembros con mayores pagos
+        $miembrosTopPagos = Pago::with('miembro')
+            ->whereBetween('fecha_pago', [$fechaInicio, $fechaFin])
+            ->selectRaw('miembro_id, COUNT(*) as total_pagos, SUM(monto) as total_monto')
+            ->groupBy('miembro_id')
+            ->orderByDesc('total_monto')
+            ->limit(10)
+            ->get();
+
+        // Lista de membresías para el filtro
+        $membresias = Membresia::all();
+
+        return view('pagos.index', compact(
+            'pagos',
+            'fechaInicio',
+            'fechaFin',
+            'totalIngresos',
+            'totalPagos',
+            'pagosPorMembresia',
+            'pagosPorUsuario',
+            'miembrosTopPagos',
+            'membresias'
+        ));
     }
 
     public function create(Request $request)
