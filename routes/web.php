@@ -10,11 +10,20 @@ use App\Http\Controllers\PagoController;
 use App\Http\Controllers\VisitaController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\PortalMiembroController;
 
-// Redirect root to login
+// Redirect root to portal de miembros
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect()->route('portal.index');
 });
+
+// Portal de Miembros (Autenticación de miembros)
+Route::get('/portal', [PortalMiembroController::class, 'index'])->name('portal.index');
+Route::post('/portal/login', [PortalMiembroController::class, 'login'])->name('portal.login');
+Route::get('/portal/cambiar-contrasena', [PortalMiembroController::class, 'showChangePassword'])->name('portal.change-password');
+Route::post('/portal/cambiar-contrasena', [PortalMiembroController::class, 'changePassword'])->name('portal.change-password.post');
+Route::post('/portal/logout', [PortalMiembroController::class, 'logout'])->name('portal.logout');
+Route::get('/portal/miembro/{id}', [PortalMiembroController::class, 'show'])->name('portal.show');
 
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

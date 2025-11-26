@@ -55,6 +55,18 @@
             </div>
 
             <div class="form-group">
+                <label for="username">Usuario (para portal) *</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" required placeholder="Ej: juan.perez">
+                <small style="color: #757575;">El miembro usará este usuario para acceder al portal</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña *</label>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Mínimo 6 caracteres">
+                <small style="color: #757575;">Contraseña inicial (deberá cambiarla al primer acceso)</small>
+            </div>
+
+            <div class="form-group">
                 <label for="genero">Género</label>
                 <select class="form-control" id="genero" name="genero">
                     <option value="">Seleccionar...</option>

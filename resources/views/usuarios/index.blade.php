@@ -27,9 +27,13 @@
                 <td>{{ $usuario->username }}</td>
                 <td>{{ $usuario->email }}</td>
                 <td>
-                    <span class="badge {{ $usuario->role === 'admin' ? 'badge-success' : 'badge-warning' }}">
-                        {{ $usuario->role === 'admin' ? 'Administrador' : 'Staff' }}
-                    </span>
+                    @if($usuario->role === 'admin')
+                        <span class="badge badge-success">Administrador</span>
+                    @elseif($usuario->role === 'staff')
+                        <span class="badge badge-warning">Staff</span>
+                    @else
+                        <span class="badge badge-info">Miembro</span>
+                    @endif
                 </td>
                 <td>
                     <span class="badge {{ $usuario->is_active ? 'badge-success' : 'badge-danger' }}">

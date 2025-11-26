@@ -42,6 +42,8 @@ class MiembroController extends Controller
             'documento' => 'required|string|unique:miembros',
             'telefono' => 'nullable|string',
             'email' => 'nullable|email',
+            'username' => 'required|string|unique:miembros,username|min:4|max:255',
+            'password' => 'required|string|min:6',
             'fecha_nacimiento' => 'nullable|date',
             'direccion' => 'nullable|string',
             'genero' => 'nullable|in:masculino,femenino,otro',
@@ -53,6 +55,7 @@ class MiembroController extends Controller
 
         $data = $request->all();
         $data['fecha_inscripcion'] = now()->toDateString();
+        $data['must_change_password'] = true; // Obligar a cambiar contraseña en primer acceso
 
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('miembros', 'public');
@@ -61,7 +64,7 @@ class MiembroController extends Controller
         $miembro = Miembro::create($data);
 
         // Redirigir a página de opciones después de crear el miembro
-        return redirect()->route('miembros.opciones', $miembro)->with('success', 'Miembro registrado exitosamente.');
+        return redirect()->route('miembros.opciones', $miembro)->with('success', 'Miembro registrado exitosamente. Usuario: ' . $miembro->username);
     }
 
     public function show(Miembro $miembro)

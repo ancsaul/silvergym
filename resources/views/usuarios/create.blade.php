@@ -50,6 +50,7 @@
                 <option value="">Seleccionar...</option>
                 <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Administrador</option>
                 <option value="staff" {{ old('role') === 'staff' ? 'selected' : '' }}>Staff</option>
+                <option value="miembro" {{ old('role') === 'miembro' ? 'selected' : '' }}>Miembro</option>
             </select>
         </div>
 

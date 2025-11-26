@@ -17,6 +17,9 @@ class Miembro extends Model
         'documento',
         'telefono',
         'email',
+        'username',
+        'password',
+        'must_change_password',
         'fecha_nacimiento',
         'direccion',
         'foto',
@@ -28,12 +31,18 @@ class Miembro extends Model
         'contacto_emergencia_relacion',
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     protected function casts(): array
     {
         return [
             'fecha_nacimiento' => 'date',
             'fecha_inscripcion' => 'date',
             'activo' => 'boolean',
+            'must_change_password' => 'boolean',
+            'password' => 'hashed',
         ];
     }
 
