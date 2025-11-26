@@ -13,6 +13,9 @@ class Visita extends Model
 
     protected $fillable = [
         'miembro_id',
+        'tipo',
+        'nombre_visitante',
+        'monto',
         'fecha_hora_entrada',
         'fecha_hora_salida',
     ];
@@ -22,6 +25,7 @@ class Visita extends Model
         return [
             'fecha_hora_entrada' => 'datetime',
             'fecha_hora_salida' => 'datetime',
+            'monto' => 'decimal:2',
         ];
     }
 
@@ -31,5 +35,25 @@ class Visita extends Model
     public function miembro()
     {
         return $this->belongsTo(Miembro::class, 'miembro_id');
+    }
+
+    /**
+     * Check if this is a regular visit (without membership).
+     */
+    public function esVisitaRegular()
+    {
+        return $this->tipo === 'regular';
+    }
+
+    /**
+     * Get the display name for the visit.
+     */
+    public function getNombreDisplayAttribute()
+    {
+        if ($this->esVisitaRegular()) {
+            return $this->nombre_visitante;
+        }
+        
+        return $this->miembro ? $this->miembro->nombre_completo : 'N/A';
     }
 }

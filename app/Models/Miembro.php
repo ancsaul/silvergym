@@ -23,6 +23,9 @@ class Miembro extends Model
         'genero',
         'fecha_inscripcion',
         'activo',
+        'contacto_emergencia_nombre',
+        'contacto_emergencia_telefono',
+        'contacto_emergencia_relacion',
     ];
 
     protected function casts(): array

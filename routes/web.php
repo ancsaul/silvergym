@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Miembros management
     Route::resource('miembros', MiembroController::class);
+    Route::get('/miembros/{miembro}/opciones', [MiembroController::class, 'opciones'])->name('miembros.opciones');
     Route::get('/miembros/{miembro}/credencial', [MiembroController::class, 'generarCredencial'])->name('miembros.credencial');
 
     // Pagos management

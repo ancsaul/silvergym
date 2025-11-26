@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('visitas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('miembro_id')->constrained('miembros')->onDelete('cascade');
+            $table->foreignId('miembro_id')->nullable()->constrained('miembros')->onDelete('cascade');
+            $table->enum('tipo', ['miembro', 'regular'])->default('miembro');
+            $table->string('nombre_visitante')->nullable(); // Para visitas regulares
+            $table->decimal('monto', 10, 2)->nullable(); // Costo de visita regular
             $table->dateTime('fecha_hora_entrada');
             $table->dateTime('fecha_hora_salida')->nullable();
             $table->timestamps();

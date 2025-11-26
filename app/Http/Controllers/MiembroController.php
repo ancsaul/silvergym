@@ -46,6 +46,9 @@ class MiembroController extends Controller
             'direccion' => 'nullable|string',
             'genero' => 'nullable|in:masculino,femenino,otro',
             'foto' => 'nullable|image|max:2048',
+            'contacto_emergencia_nombre' => 'nullable|string|max:255',
+            'contacto_emergencia_telefono' => 'nullable|string|max:255',
+            'contacto_emergencia_relacion' => 'nullable|string|max:255',
         ]);
 
         $data = $request->all();
@@ -55,9 +58,10 @@ class MiembroController extends Controller
             $data['foto'] = $request->file('foto')->store('miembros', 'public');
         }
 
-        Miembro::create($data);
+        $miembro = Miembro::create($data);
 
-        return redirect()->route('miembros.index')->with('success', 'Miembro registrado exitosamente.');
+        // Redirigir a página de opciones después de crear el miembro
+        return redirect()->route('miembros.opciones', $miembro)->with('success', 'Miembro registrado exitosamente.');
     }
 
     public function show(Miembro $miembro)
@@ -114,5 +118,10 @@ class MiembroController extends Controller
     public function generarCredencial(Miembro $miembro)
     {
         return view('miembros.credencial', compact('miembro'));
+    }
+
+    public function opciones(Miembro $miembro)
+    {
+        return view('miembros.opciones', compact('miembro'));
     }
 }

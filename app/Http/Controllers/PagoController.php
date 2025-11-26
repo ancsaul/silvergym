@@ -22,12 +22,13 @@ class PagoController extends Controller
         return view('pagos.index', compact('pagos'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $miembros = Miembro::where('activo', true)->orderBy('nombre')->get();
         $membresias = Membresia::where('activo', true)->orderBy('nombre')->get();
+        $miembroSeleccionado = $request->miembro_id;
         
-        return view('pagos.create', compact('miembros', 'membresias'));
+        return view('pagos.create', compact('miembros', 'membresias', 'miembroSeleccionado'));
     }
 
     public function store(Request $request)

@@ -28,7 +28,7 @@
             <select class="form-control" id="miembro_id" name="miembro_id" required>
                 <option value="">Seleccionar miembro...</option>
                 @foreach($miembros as $miembro)
-                    <option value="{{ $miembro->id }}" {{ old('miembro_id') == $miembro->id ? 'selected' : '' }}>
+                    <option value="{{ $miembro->id }}" {{ (old('miembro_id', $miembroSeleccionado ?? null) == $miembro->id) ? 'selected' : '' }}>
                         {{ $miembro->nombre_completo }} - {{ $miembro->documento }}
                     </option>
                 @endforeach

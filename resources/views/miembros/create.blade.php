@@ -75,6 +75,32 @@
             <textarea class="form-control" id="direccion" name="direccion" rows="2">{{ old('direccion') }}</textarea>
         </div>
 
+        <div style="margin-top: 30px; padding-top: 30px; border-top: 2px solid #e0e0e0;">
+            <h3 style="font-size: 18px; font-weight: 700; color: #333; margin-bottom: 20px;">
+                🚨 Contacto de Emergencia
+            </h3>
+            <p style="font-size: 14px; color: #757575; margin-bottom: 20px;">
+                Información de contacto en caso de accidente o emergencia
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label for="contacto_emergencia_nombre">Nombre del Contacto</label>
+                    <input type="text" class="form-control" id="contacto_emergencia_nombre" name="contacto_emergencia_nombre" value="{{ old('contacto_emergencia_nombre') }}" placeholder="Ej: María García">
+                </div>
+
+                <div class="form-group">
+                    <label for="contacto_emergencia_telefono">Teléfono</label>
+                    <input type="text" class="form-control" id="contacto_emergencia_telefono" name="contacto_emergencia_telefono" value="{{ old('contacto_emergencia_telefono') }}" placeholder="Ej: 555-1234">
+                </div>
+
+                <div class="form-group">
+                    <label for="contacto_emergencia_relacion">Relación</label>
+                    <input type="text" class="form-control" id="contacto_emergencia_relacion" name="contacto_emergencia_relacion" value="{{ old('contacto_emergencia_relacion') }}" placeholder="Ej: Madre, Esposo">
+                </div>
+            </div>
+        </div>
+
         <div style="display: flex; gap: 10px; margin-top: 30px;">
             <button type="submit" class="btn btn-primary">Registrar Miembro</button>
             <a href="{{ route('miembros.index') }}" class="btn" style="background: #6c757d; color: white;">Cancelar</a>

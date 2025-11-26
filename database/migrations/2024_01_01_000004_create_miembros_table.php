@@ -24,6 +24,12 @@ return new class extends Migration
             $table->enum('genero', ['masculino', 'femenino', 'otro'])->nullable();
             $table->date('fecha_inscripcion');
             $table->boolean('activo')->default(true);
+            
+            // Información de contacto de emergencia
+            $table->string('contacto_emergencia_nombre')->nullable();
+            $table->string('contacto_emergencia_telefono')->nullable();
+            $table->string('contacto_emergencia_relacion')->nullable();
+            
             $table->timestamps();
         });
     }

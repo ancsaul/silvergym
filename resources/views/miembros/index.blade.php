@@ -51,9 +51,17 @@
                     @endif
                 </td>
                 <td>
-                    <a href="{{ route('miembros.show', $miembro) }}" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;">Ver</a>
-                    <a href="{{ route('miembros.edit', $miembro) }}" class="btn btn-success" style="padding: 6px 12px; font-size: 12px;">Editar</a>
-                    <a href="{{ route('miembros.credencial', $miembro) }}" class="btn" style="background: #aa00ff; color: white; padding: 6px 12px; font-size: 12px;">Credencial</a>
+                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                        <a href="{{ route('miembros.show', $miembro) }}" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" title="Ver detalles">👁️ Ver</a>
+                        <a href="{{ route('miembros.edit', $miembro) }}" class="btn" style="background: #fb8c00; color: white; padding: 6px 12px; font-size: 12px;" title="Editar">✏️ Editar</a>
+                        <a href="{{ route('miembros.credencial', $miembro) }}" class="btn" style="background: #8e24aa; color: white; padding: 6px 12px; font-size: 12px;" title="Imprimir credencial">🎫</a>
+                        <a href="{{ route('pagos.create') }}?miembro_id={{ $miembro->id }}" class="btn btn-success" style="padding: 6px 12px; font-size: 12px;" title="Registrar pago">💰</a>
+                        <form action="{{ route('miembros.destroy', $miembro) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" onclick="return confirm('¿Estás seguro de eliminar este miembro?')" title="Eliminar">🗑️</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             @empty
